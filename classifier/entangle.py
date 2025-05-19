@@ -14,8 +14,7 @@ np.random.seed(42)
 
 def entangling_capability(num_qubits: int,
                           num_layers: int,
-                          num_samples: int = 1000,
-                          seed: int | None = None) -> float:
+                          num_samples: int = 1000) -> float:
     """
     Since Pennylane does not support meyer-wallach measure yet, I use community implementation
     
@@ -33,16 +32,16 @@ def entangling_capability(num_qubits: int,
         inputs = np.random.uniform(0, 2.0 * np.pi, num_qubits)
         weights = np.random.uniform(0, 2.0 * np.pi, (num_layers, num_qubits))
         state = circuit(inputs, weights)
-        psi = state.reshape([2] * num_qubits)
+        _psi = state.reshape([2] * num_qubits)
 
         sum_purity = 0.0
         for q in range(num_qubits):
-            psi = np.moveaxis(psi, q, 0).reshape(2, -1)
+            psi = np.moveaxis(_psi, q, 0).reshape(2, -1)
             rho = psi @ psi.conj().T
             purity = np.trace(rho @ rho).real
             sum_purity += purity
         # Meyer–Wallach Q
-        Q = 2.0 * (1.0 - purity_sum / num_qubits)
+        Q = 2.0 * (1.0 - sum_purity / num_qubits)
         q_values.append(Q)
 
     return float(np.mean(q_values))
@@ -60,8 +59,7 @@ for path in config_paths:
     num_qubits = config.model_config.num_qubits
     num_layers = config.model_config.num_quantum_layers
     num_samples = 1024
-    seed = 42
     
-    Q_est = entangling_capability(num_qubits, num_layers, num_samples, seed)
+    Q_est = entangling_capability(num_qubits, num_layers, num_samples)
     print(f"Estimated Entangling Capability Q = {Q_est:.3f}\n")
     print(f'============================================================')

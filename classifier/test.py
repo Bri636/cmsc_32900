@@ -79,7 +79,8 @@ def evaluate_model(args: Namespace,
                              save_path_num_qubits)
     
     class_names = [str(i) for i in range(config.model_config.num_classes)]
-    test_cm.plot(labels=class_names, cmap='magma',
+    test_cm.plot(labels=class_names, 
+                 cmap='magma',
                  ax=plot_ax)
     count = config.model_config.num_qubits if args.study=='qubit' else config.model_config.num_quantum_layers
     plot_ax.set_title(f'Confusion Matrix - {args.study.capitalize()}s per VQC: {count}')
