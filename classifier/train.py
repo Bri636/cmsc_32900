@@ -43,27 +43,6 @@ class TrainConfig(DataClassYAMLMixin):
     model_config: ModelConfig = field(default_factory=lambda: ModelConfig())
 
 
-def save_metrics(results: dict, metrics: dict, **kwargs) -> None:
-
-    accuracies = [acc.item() for acc in results['accuracy']]
-    cm = results['confusion'][-1]
-    epochs = list(range(1, len(accuracies) + 1))
-
-    fig, (ax_acc, ax_cm) = plt.subplots(1, 2, figsize=(12, 5))
-    
-    ax_acc.plot(epochs, accuracies, marker="o")
-    ax_acc.set_title("Validation Accuracy Per Epoch")
-    ax_acc.set_xlabel("Epoch")
-    ax_acc.set_ylabel("Accuracy")
-    metrics["confusion"].plot(cm, ax=ax_cm)
-    ax_cm.set_title(f"Confusion Matrix Epoch {epochs[-1]}")
-
-    plt.tight_layout()
-    save_path = f'./images/metrics_epoch_{epochs[-1]}.png'
-    plt.savefig(save_path)
-    print(f'Metrics saved to {save_path}')
-
-
 def main():
 
     argparse = ArgumentParser()
@@ -163,7 +142,6 @@ def main():
     save_ckpt(model, optimizer, loss, epoch, config, save_path)
 
     val_results = val_tracker.compute_all()
-    save_metrics(val_results, val_metrics)
 
     if args.study=='layer':
         run_name = f'epoch_{epoch}_{config.model_config.num_quantum_layers}_layers'
