@@ -48,9 +48,9 @@ def plot_layer_study(df: pd.DataFrame) -> Figure:
     ax.set_ylim(0, 100)  
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Accuracy") 
-    ax.set_title("Validation Accuracy vs Epoch via VQC Layer Depth")
+    ax.set_title("Validation Accuracy vs Epoch by VQC Layer Depth")
     ax.grid(alpha=.3)
-    ax.legend(title='VQC Depth')
+    ax.legend(title='Number of Layers')
     
     handles, labels = ax.get_legend_handles_labels()
     order = sorted(
@@ -59,24 +59,26 @@ def plot_layer_study(df: pd.DataFrame) -> Figure:
     )
     ax.legend([handles[i] for i in order],
             [labels[i]  for i in order],
-            title="Depth")
+            title="Number of Layers")
     
     fig_loss, ax_loss = plt.subplots(figsize=(8,5))
     for run, grp in df.groupby("run"):
         d = grp["circuit_depth"].iloc[0]
         ax_loss.plot(grp["epochs"], grp["loss"],
-                     marker="o", label=f"{d} layers", color=depth_to_color[d])
-    ax_loss.set(title="Training Loss vs Epoch via VQC Layer Depth", xlabel="Epoch", ylabel="Loss")
+                     marker="o", 
+                     label=f"Layers: {d}", 
+                     color=depth_to_color[d])
+    ax_loss.set(title="Training Loss vs Epoch by VQC Layer Depth", xlabel="Epoch", ylabel="Loss")
     ax_loss.grid(alpha=0.3)
-    ax_loss.legend(title="Depth")
+    ax_loss.legend(title="Number of Layers")
 
     ax.yaxis.set_major_formatter(mticker.PercentFormatter(xmax=100))
     
     handles, labels = ax_loss.get_legend_handles_labels()
-    order = sorted(range(len(labels)), key=lambda i: int(labels[i].split()[0]))
+    order = sorted(range(len(labels)), key=lambda i: int(labels[i].split()[-1]))
     ax_loss.legend([handles[i] for i in order],
                 [labels[i]  for i in order],
-                title="Depth") 
+                title="Number of Layers") 
     return fig_acc, fig_loss
         
         
@@ -97,18 +99,20 @@ def plot_qubit_study(df: pd.DataFrame) -> Figure:
     ax.set_xlabel("Epoch")
     ax.set_ylabel("Accuracy %") 
     ax.set_ylabel("Accuracy")
-    ax.set_title("Validation Accuracy vs Epoch via Qubits per Circuit")
+    ax.set_title("Validation Accuracy vs Epoch by Qubits per VQC")
     ax.grid(alpha=.3)
-    ax.legend(title='Number Qubits')
+    ax.legend(title='Number of Qubits')
     
     fig_loss, ax_loss = plt.subplots(figsize=(8,5))
     for run, grp in df.groupby("run"):
         q = grp["num_qubits"].iloc[0]
         ax_loss.plot(grp["epochs"], grp["loss"],
-                     marker="o", label=f"{q} qubits", color=depth_to_color[q])
-    ax_loss.set(title="Training Loss vs Epoch via Qubits per Circuit", xlabel="Epoch", ylabel="Loss")
+                     marker="o", 
+                     label=f"Qubits: {q}", 
+                     color=depth_to_color[q])
+    ax_loss.set(title="Training Loss vs Epoch by Qubits per VQC", xlabel="Epoch", ylabel="Loss")
     ax_loss.grid(alpha=0.3)
-    ax_loss.legend(title="Qubits")
+    ax_loss.legend(title="Number of Qubits")
     ax.yaxis.set_major_formatter(mticker.PercentFormatter(xmax=100))
 
     return fig_acc, fig_loss 
@@ -147,8 +151,8 @@ def plot_accuracy_vs_depth(df: pd.DataFrame) -> Figure:
     ax.bar(x, y, yerr=yerr, capsize=5)
     _annotate_bars(ax, x, y)   
     ax.set_xlabel("Circuit Depth")
-    ax.set_ylabel("Average Test Accuracy")
-    ax.set_title("Average Test Accuracy vs VQC Depth")
+    ax.set_ylabel("Accuracy")
+    ax.set_title("Test Accuracy vs VQC Layer Depth")
     ax.set_ylim(0, 100)
     ax.grid(alpha=0.3, axis="y")
     ax.yaxis.set_major_formatter(mticker.PercentFormatter(xmax=100))
@@ -182,8 +186,8 @@ def plot_accuracy_vs_qubits(df: pd.DataFrame) -> Figure:
     ax.bar(x, y, yerr=yerr, capsize=5)
     _annotate_bars(ax, x, y)   
     ax.set_xlabel("Number Qubits")
-    ax.set_ylabel("Average Test Accuracy")
-    ax.set_title("Average Test Accuracy vs Qubits per Circuit")
+    ax.set_ylabel("Accuracy")
+    ax.set_title("Test Accuracy vs Qubits per VQC")
     ax.set_ylim(0, 100)
     ax.grid(alpha=0.3, axis="y")
     ax.yaxis.set_major_formatter(mticker.PercentFormatter(xmax=100))
