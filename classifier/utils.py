@@ -1,5 +1,3 @@
-""" GOOD """
-
 import torch
 from torch import nn
 from matplotlib import pyplot as plt

@@ -1,4 +1,3 @@
-""" GOOD """
 from __future__ import annotations
 
 import pennylane as qml

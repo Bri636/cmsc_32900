@@ -1,4 +1,3 @@
-""" GOOD """
 from __future__ import annotations
 from datasets import prepare_dataloaders
 from model import HybridQNetwork, display_model
