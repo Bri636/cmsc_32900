@@ -1,11 +1,6 @@
-""" Good """
-
 from __future__ import annotations
 
 import pennylane as qml
-from pennylane import numpy as np
-from pennylane.templates import RandomLayers
-import pennylane as qml 
 from pennylane.measurements import ExpectationMP
 from pennylane.qnn.torch import TorchLayer
 from qiskit import QuantumCircuit
@@ -17,14 +12,13 @@ import torch
 from torch import nn
 from torchvision import models
 
-from dataclasses import dataclass, field, asdict
 from typing import Literal
 import warnings
 warnings.filterwarnings("ignore")
 
 def display_model(model: HybridQNetwork, study: Literal['layer', 'qubit']) -> None:
     fig = model.draw_first_layer()
-    plt.title(f'VQC Layer With {model.num_qubits} Qubits and {model.num_qlayers} Layers')
+    plt.title(f'VQC With {model.num_qubits} Qubits and {model.num_qlayers} Layers')
     fig.savefig(f'./outputs/{study}_study/images/layers_{model.num_qlayers}_qubits_{model.num_qubits}.png')
 
 def quantum_layer(num_qubits: int, num_layers: int, device: str) -> TorchLayer: 
@@ -41,7 +35,7 @@ def quantum_layer(num_qubits: int, num_layers: int, device: str) -> TorchLayer:
     return TorchLayer(quantum_node, weights)
 
 class HybridQNetwork(nn.Module): 
-    """ Hybrid layer that interleaves Resnet18, VQC layer, and classifier """
+    """ Hybrid Model that interleaves Resnet18 with Projection Layer, VQC block, and classifier """
     def __init__(self, 
                  num_classes: int = 10, 
                  num_qubits: int = 2, 
