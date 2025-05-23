@@ -155,7 +155,7 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
     fig.savefig(outdir / f'cm_grid_epoch_{args.num_epochs}.png', dpi=300)
     plt.close(fig)
-    print(f"\nSaved combined grid to {outdir}/cm_grid_epoch_{args.num_epochs}.png")
+    print(f"\nSaving cm grid to {outdir}/cm_grid_epoch_{args.num_epochs}.png ......")
 
 if __name__ == "__main__":
 
